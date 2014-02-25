@@ -1,0 +1,22 @@
+Yunli Tang
+ytang4@binghamton.edu
+
+SAMPLE INPUT/OUTPUT:
+
+./confserver
+admin: started server on 'remote04' at '51544'
+admin: connect from 'remote06' at '60816'
+remote06(60816): hello
+remote06(60816): CS
+remote06(60816): 528
+admin: disconnect from 'remote06(60816)'
+
+./confclient remote04 51544
+admin: connected to server on 'remote04' at '51544' thru '60816'
+hello
+CS
+528
+^D
+
+
+
