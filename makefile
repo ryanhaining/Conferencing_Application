@@ -14,6 +14,9 @@ confclient: confclient.o confutils.o
 confserver: confserver.o confutils.o
 	gcc -g -D_XOPEN_SOURCE=600 -o confserver confserver.o  confutils.o
 
+clean:
+	rm -rf *o confclient confserver
+
 SOURCE = confutils.c confclient.c confserver.c Readme.txt makefile
 SUBMISSION=ytang4
 submit: $(SOURCE)
