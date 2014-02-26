@@ -1,26 +1,28 @@
-CC=gcc
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -pedantic -g -D_XOPEN_SOURCE=600
 
-.c.o:
-	$(CC) -Wall -Wextra -pedantic -D_XOPEN_SOURCE=600 -std=c99 -g -c $?
+SERVER = confserver
+CLIENT = confclient
+UTILS = confutils
+
+SUBMISSION = ytang4
+SOURCE = $(SERVER).c $(CLIENT).c $(UTILS).c makefile README
 
 # compile client and server
-all: confclient confserver
+all: $(CLIENT) $(SERVER) 
 
 # compile client only
-confclient: confclient.o confutils.o
-	gcc -g -D_XOPEN_SOURCE=600 -o confclient confclient.o  confutils.o
+$(CLIENT): $(CLIENT).o $(UTILS).o
 
 # compile server program
-confserver: confserver.o confutils.o
-	gcc -g -D_XOPEN_SOURCE=600 -o confserver confserver.o  confutils.o
+$(SERVER): $(SERVER).o $(UTILS).o
 
-clean:
-	rm -rf *o confclient confserver
-
-SOURCE = confutils.c confclient.c confserver.c Readme.txt makefile
-SUBMISSION=ytang4
 submit: $(SOURCE)
 	rm -rf $(SUBMISSION).tar.gz $(SUBMISSION)/
 	mkdir $(SUBMISSION)
 	cp $(SOURCE) $(SUBMISSION)
 	tar -zcvf $(SUBMISSION).tar.gz $(SUBMISSION)/
+
+clean:
+	rm -f *.o $(CLIENT) $(SERVER) $(SUBMISSION).tar.gz
+	rm -rf $(SUBMISSION)/
