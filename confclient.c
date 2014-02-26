@@ -1,6 +1,8 @@
 /*--------------------------------------------------------------------*/
 /* conference client */
 
+#include "confutils.h"
+
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
@@ -17,9 +19,6 @@
 
 #define MAXMSGLEN  1024
 
-char *recvtext(int sd);
-int sendtext(int sd, char *msg);
-int hook_to_server(const char *servhost, const char* servport);
 /*--------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------*/
