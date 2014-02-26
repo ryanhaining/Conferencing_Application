@@ -18,7 +18,7 @@
 
 char *recvtext(int sd);
 int sendtext(int sd, char *msg);
-int	start_server();
+int start_server();
 /*--------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------*/
@@ -138,22 +138,22 @@ int main(int argc, char *argv[]){
 		}
 		for (int client_num = 0; client_num < clients.size; client_num++){
 			int frsock = clients.client_list[client_num];
-            if (frsock == servsock) continue;
-            
-			if (FD_ISSET(frsock, &live_clients.livesdset)) {
+			if (frsock == servsock) continue;
+ 
+			if (FD_ISSET(frsock, &live_clients.livesdset)){
 				char *msg = recvtext(frsock);
 				if (!msg){
 					disconnect(&clients, &frsock);
 				}
 				else {
 					relay_message(&clients, &frsock, msg);
-                }	
+				}	
                 free(msg);
-            }
-        }
-        if (FD_ISSET(servsock, &live_clients.livesdset)) {
+			}
+		}
+        if (FD_ISSET(servsock, &live_clients.livesdset)){
 			accept_connection(&clients, &servsock);		
-        }
-    }
+		}
+	}
 }
 /*--------------------------------------------------------------------*/
