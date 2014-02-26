@@ -1,6 +1,8 @@
 /*--------------------------------------------------------------------*/
 /* conference server */
 
+#include "confutils.h"
+
 #include <stdio.h>
 #include <assert.h>
 #include <fcntl.h>
@@ -16,9 +18,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char *recvtext(int sd);
-int sendtext(int sd, char *msg);
-int start_server();
 /*--------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------*/
