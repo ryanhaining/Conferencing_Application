@@ -19,7 +19,7 @@
 
 char *recvtext(int sd);
 int sendtext(int sd, char *msg);
-int hooktoserver(const char *servhost, const char* servport);
+int hook_to_server(const char *servhost, const char* servport);
 /*--------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------*/
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* get hooked on to the server */
-	int sock = hooktoserver(argv[1], argv[2]);
+	int sock = hook_to_server(argv[1], argv[2]);
 	if (sock == -1) exit(1);
 	fd_set readfds;
 
