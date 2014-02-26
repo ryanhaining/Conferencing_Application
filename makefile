@@ -6,7 +6,7 @@ CLIENT = confclient
 UTILS = confutils
 
 SUBMISSION = ytang4
-SOURCE = $(SERVER).c $(CLIENT).c $(UTILS).c makefile README
+SOURCE = $(SERVER).c $(CLIENT).c $(UTILS).c $(UTILS).h makefile README
 
 # compile client and server
 all: $(CLIENT) $(SERVER) 
