@@ -151,7 +151,7 @@ int main(int argc, char *argv[]){
 				free(msg);
 			}
 		}
-        if (FD_ISSET(servsock, &live_clients.livesdset)){
+		if (FD_ISSET(servsock, &live_clients.livesdset)){
 			accept_connection(&clients, &servsock);		
 		}
 	}
