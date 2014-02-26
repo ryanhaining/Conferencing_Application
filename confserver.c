@@ -148,7 +148,7 @@ int main(int argc, char *argv[]){
 				else {
 					relay_message(&clients, &frsock, msg);
 				}	
-                free(msg);
+				free(msg);
 			}
 		}
         if (FD_ISSET(servsock, &live_clients.livesdset)){
