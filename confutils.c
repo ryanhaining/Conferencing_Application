@@ -146,7 +146,7 @@ char *recvtext(int sd){
 	return msg ;
 }
 
-int sendtext(int sd, char *msg){
+int sendtext(int sd, const char *msg){
 	long len;
 	
 	len = (msg ? strlen(msg) + 1 : 0);

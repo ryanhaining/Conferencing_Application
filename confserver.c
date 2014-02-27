@@ -30,7 +30,8 @@ typedef struct HostInfo{
 	char client_port_nb[128];
 }HostInfo; 
 
-static void build_set(Clients *clients, LiveClients *live_clients, int servsock){
+static void build_set(const Clients *clients, LiveClients *live_clients,
+	    int servsock){
 	live_clients->livesdmax = servsock;
 	FD_ZERO(&(live_clients->livesdset));
 	FD_SET(servsock, &(live_clients->livesdset));
@@ -78,7 +79,7 @@ static void disconnect(Clients *clients, int frsock){
 	}
 	close(frsock);
 }
-static void relay_message(Clients *clients, int frsock, char *msg){
+static void relay_message(const Clients *clients, int frsock, const char *msg){
 	struct sockaddr_in sockaddr = get_client_info(frsock);
 	HostInfo host_info = get_host_info(sockaddr);	
 	unsigned short client_port = ntohs(sockaddr.sin_port);
