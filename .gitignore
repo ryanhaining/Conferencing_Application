@@ -1,3 +1,11 @@
+# submission
+ytang4/
+*.tar.gz
+
+# executables
+confserver
+confclient
+
 # Object files
 *.o
 *.ko
