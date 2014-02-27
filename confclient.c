@@ -1,6 +1,3 @@
-/*--------------------------------------------------------------------*/
-/* conference client */
-
 #include "confutils.h"
 
 #include <stdio.h>
@@ -19,17 +16,13 @@
 
 #define MAXMSGLEN  1024
 
-/*--------------------------------------------------------------------*/
-
-/*--------------------------------------------------------------------*/
-
-void build_set(int *sock, fd_set *readfds){
+static void build_set(int *sock, fd_set *readfds){
 	FD_ZERO(readfds);
 	FD_SET(*sock, readfds);
 	FD_SET(STDIN_FILENO, readfds);
 }		
 
-void service_server(int *sock){
+static void service_server(int *sock){
 	char *msg = recvtext(*sock);
 	if (!msg) { 
 			fprintf(stderr, "error: server died\n");
@@ -39,7 +32,7 @@ void service_server(int *sock){
 	free(msg);
 }
 
-void service_user(int *sock){
+static void service_user(int *sock){
 	char msg[MAXMSGLEN];
 	if (!fgets(msg, sizeof msg, stdin)) {
 			close(*sock);
@@ -48,13 +41,11 @@ void service_user(int *sock){
 }
 
 int main(int argc, char *argv[]) {
-	/* check usage */
 	if (argc != 3) {
 			fprintf(stderr, "usage : %s <servhost> <servport>\n", argv[0]);
 			exit(1);
 	}
 
-	/* get hooked on to the server */
 	int sock = hook_to_server(argv[1], argv[2]);
 	if (sock == -1) exit(1);
 	fd_set readfds;
@@ -74,4 +65,3 @@ int main(int argc, char *argv[]) {
 	}
 
 }
-/*--------------------------------------------------------------------*/

@@ -1,6 +1,3 @@
-/*--------------------------------------------------------------------*/
-/* conference server */
-
 #include "confutils.h"
 
 #include <stdio.h>
@@ -18,10 +15,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/*--------------------------------------------------------------------*/
-
-/*--------------------------------------------------------------------*/
-
 typedef struct Clients{
 	int client_list[1024];
 	int size;
@@ -37,7 +30,7 @@ typedef struct HostInfo{
 	char client_port_nb[128];
 }HostInfo; 
 
-void build_set(Clients *clients, LiveClients *live_clients, int* servsock){
+static void build_set(Clients *clients, LiveClients *live_clients, int* servsock){
 	live_clients->livesdmax = *servsock;
 	FD_ZERO(&(live_clients->livesdset));
 	FD_SET(*servsock, &(live_clients->livesdset));
@@ -48,7 +41,7 @@ void build_set(Clients *clients, LiveClients *live_clients, int* servsock){
 		FD_SET(clients->client_list[i], &(live_clients->livesdset));
 	}	
 }
-struct sockaddr_in get_client_info(int *frsock){
+static struct sockaddr_in get_client_info(int *frsock){
 	struct sockaddr_in sockaddr;
 	memset(&sockaddr, 0, sizeof(sockaddr));
 	socklen_t len = sizeof(sockaddr);
@@ -59,7 +52,7 @@ struct sockaddr_in get_client_info(int *frsock){
 	return sockaddr;
 }
 
-HostInfo get_host_info(struct sockaddr_in *sockaddr){		
+static HostInfo get_host_info(struct sockaddr_in *sockaddr){		
 	HostInfo host_info;
 	if (getnameinfo((struct sockaddr*)sockaddr, sizeof(*sockaddr), host_info.client_host, sizeof(host_info.client_host),
 		host_info.client_port_nb, sizeof(host_info.client_port_nb), 0) != 0){
@@ -68,7 +61,7 @@ HostInfo get_host_info(struct sockaddr_in *sockaddr){
 	}
 	return host_info;
 }
-void disconnect(Clients *clients, int *frsock){
+static void disconnect(Clients *clients, int *frsock){
 	struct sockaddr_in sockaddr = get_client_info(frsock);
 	HostInfo host_info = get_host_info(&sockaddr);	
 	unsigned short client_port = ntohs(sockaddr.sin_port);
@@ -85,7 +78,7 @@ void disconnect(Clients *clients, int *frsock){
 	}
 	close(*frsock);
 }
-void relay_message(Clients *clients, int *frsock, char *msg){
+static void relay_message(Clients *clients, int *frsock, char *msg){
 	struct sockaddr_in sockaddr = get_client_info(frsock);
 	HostInfo host_info = get_host_info(&sockaddr);	
 	unsigned short client_port = ntohs(sockaddr.sin_port);
@@ -99,7 +92,7 @@ void relay_message(Clients *clients, int *frsock, char *msg){
 		}			
 	}
 }
-void accept_connection(Clients* clients, int *servsock){
+static void accept_connection(Clients* clients, int *servsock){
 	struct sockaddr_in sockaddr;
 	memset(&sockaddr, 0, sizeof(sockaddr));
 	socklen_t len = sizeof(sockaddr);	
@@ -116,12 +109,11 @@ void accept_connection(Clients* clients, int *servsock){
 	}
 }
 int main(int argc, char *argv[]){
-	/* check usage */
 	if (argc != 1) {
 		fprintf(stderr, "usage : %s\n", argv[0]);
 		exit(1);
 	}
-	/* get ready to receive requests */
+	
 	int servsock = start_server();
 	if (servsock == -1) {
 		exit(1);
@@ -155,4 +147,3 @@ int main(int argc, char *argv[]){
 		}
 	}
 }
-/*--------------------------------------------------------------------*/

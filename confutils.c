@@ -1,6 +1,3 @@
-/*--------------------------------------------------------------------*/
-/* functions to connect clients and server */
-
 #include "confutils.h"
 
 #include <stdio.h>
@@ -18,11 +15,8 @@
 #include <errno.h>
 
 #define MAXNAMELEN 256
-/*--------------------------------------------------------------------*/
 
-
-/*----------------------------------------------------------------*/
-void get_server_info(int *sd){
+static void get_server_info(int *sd){
 	char servhost[128];
 	unsigned short servport;
 	struct sockaddr_in sockaddr;
@@ -41,7 +35,7 @@ void get_server_info(int *sd){
 	printf("admin: started server on '%s' at '%hu'\n", servhost, servport);
 
 }
-void get_connection_info(const char *servhost, const char *servport, int *sd){
+static void get_connection_info(const char *servhost, const char *servport, int *sd){
 	struct sockaddr_in sockaddr;
 	memset(&sockaddr, 0, sizeof(sockaddr));
 	socklen_t len = sizeof(sockaddr);
@@ -66,8 +60,8 @@ int start_server(){
 	if (bind(sd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0){
 		perror("bind() error");
 		return -1;
-	}	
- 	/* we are ready to receive connections */
+	}
+
   	if (listen(sd, 5) < 0) {
 		perror("listen() error");
 		return -1;
@@ -75,9 +69,7 @@ int start_server(){
 	get_server_info(&sd);
 	return sd;
 }
-/*----------------------------------------------------------------*/
 
-/*----------------------------------------------------------------*/
 int hook_to_server(const char *servhost, const char* servport){
 	int sd;
  	struct addrinfo hints;
@@ -107,11 +99,9 @@ int hook_to_server(const char *servhost, const char* servport){
 	freeaddrinfo(result);
 	return sd;
 }
-/*----------------------------------------------------------------*/
 
 /* The following code is written by Yao Liu. */
 
-/*----------------------------------------------------------------*/
 int readn(int sd, char *buf, int n){
 	int toberead;
 	char *ptr;
@@ -133,12 +123,12 @@ int readn(int sd, char *buf, int n){
 char *recvtext(int sd){
 	char *msg;
 	long  len;
-	/* read the message length */
+	
 	if (!readn(sd, (char *) &len, sizeof(len))){
 		return NULL;
 	}
 	len = ntohl(len);
-	/* allocate space for message text */
+	
 	msg = NULL;
 	if (len > 0){
 		msg = (char *) malloc(len);
@@ -146,28 +136,26 @@ char *recvtext(int sd){
 			fprintf(stderr, "error : unable to malloc\n");
 			return NULL;
 		}
-		/* read the message text */
+		
 		if (!readn(sd, msg, len)){
 			free(msg);
 			return NULL;
 		}
 	}
-  /* done reading */
-  return msg ;
+  
+	return msg ;
 }
 
 int sendtext(int sd, char *msg){
 	long len;
-	/* write lent */
+	
 	len = (msg ? strlen(msg) + 1 : 0);
 	len = htonl(len);
 	if (write(sd, (char *) &len, sizeof(len)) < 0) return -1;
 		
-	/* write message text */
 	len = ntohl(len);
 	if (len > 0){
 		if (write(sd, msg, len) < 0) return -1;
 	}
 	return 1;
 }
-/*----------------------------------------------------------------*/
