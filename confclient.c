@@ -16,14 +16,14 @@
 
 #define MAXMSGLEN  1024
 
-static void build_set(int *sock, fd_set *readfds){
+static void build_set(int sock, fd_set *readfds){
 	FD_ZERO(readfds);
-	FD_SET(*sock, readfds);
+	FD_SET(sock, readfds);
 	FD_SET(STDIN_FILENO, readfds);
 }		
 
-static void service_server(int *sock){
-	char *msg = recvtext(*sock);
+static void service_server(int sock){
+	char *msg = recvtext(sock);
 	if (!msg) { 
 			fprintf(stderr, "error: server died\n");
 			exit(1);
@@ -32,12 +32,12 @@ static void service_server(int *sock){
 	free(msg);
 }
 
-static void service_user(int *sock){
+static void service_user(int sock){
 	char msg[MAXMSGLEN];
 	if (!fgets(msg, sizeof msg, stdin)) {
-			close(*sock);
+			close(sock);
 	}
-	sendtext(*sock, msg);
+	sendtext(sock, msg);
 }
 
 int main(int argc, char *argv[]) {
@@ -51,16 +51,16 @@ int main(int argc, char *argv[]) {
 	fd_set readfds;
 
 	while (1) {
-			build_set(&sock, &readfds);
+			build_set(sock, &readfds);
 			if (select(sock + 1, &readfds, NULL, NULL, NULL) < 0 ){
 					perror("select error");
 					exit(1);
 			}
 			if (FD_ISSET(sock, &readfds)){
-					service_server(&sock);
+					service_server(sock);
 			}
 			if (FD_ISSET(STDIN_FILENO, &readfds)){
-					service_user(&sock);
+					service_user(sock);
 			}
 	}
 
