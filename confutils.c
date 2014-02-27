@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
@@ -18,7 +19,6 @@
 
 static void get_server_info(int *sd){
 	char servhost[128];
-	unsigned short servport;
 	struct sockaddr_in sockaddr;
 	socklen_t addrlen = sizeof(sockaddr);
 	memset(&sockaddr, 0, sizeof(sockaddr));
@@ -31,7 +31,7 @@ static void get_server_info(int *sd){
 		perror("getsockname() error");	
 		exit(1);
 	}
-	servport = ntohs(sockaddr.sin_port);
+	uint16_t servport = ntohs(sockaddr.sin_port);
 	printf("admin: started server on '%s' at '%hu'\n", servhost, servport);
 
 }
@@ -44,8 +44,8 @@ static void get_connection_info(const char *servhost, const char *servport, int 
 		perror("getsockname() error");
 		exit(1);
 	}	
-	int clientport = ntohs(sockaddr.sin_port);
-  	printf("admin: connected to server on '%s' at '%s' thru '%d'\n", servhost, servport, clientport);
+	uint16_t clientport = ntohs(sockaddr.sin_port);
+  	printf("admin: connected to server on '%s' at '%s' thru '%hu'\n", servhost, servport, clientport);
 }
 int start_server(){
 	struct sockaddr_in sockaddr;
@@ -122,7 +122,7 @@ int readn(int sd, char *buf, int n){
 }
 char *recvtext(int sd){
 	char *msg;
-	long  len;
+	uint32_t  len;
 	
 	if (!readn(sd, (char *) &len, sizeof(len))){
 		return NULL;
@@ -147,7 +147,7 @@ char *recvtext(int sd){
 }
 
 int sendtext(int sd, const char *msg){
-	long len;
+	uint32_t len;
 	
 	len = (msg ? strlen(msg) + 1 : 0);
 	len = htonl(len);

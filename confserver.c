@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <stdint.h>
 #include <fcntl.h>
 #include <string.h>
 #include <sys/types.h> 
@@ -65,7 +66,7 @@ static HostInfo get_host_info(struct sockaddr_in sockaddr){
 static void disconnect(Clients *clients, int frsock){
 	struct sockaddr_in sockaddr = get_client_info(frsock);
 	HostInfo host_info = get_host_info(sockaddr);	
-	unsigned short client_port = ntohs(sockaddr.sin_port);
+	uint16_t client_port = ntohs(sockaddr.sin_port);
 	printf("admin: disconnect though from '%s(%hu)'\n", host_info.client_host, client_port);
 	
 	for (int i = 0 ; i < clients->size; i++){
@@ -82,7 +83,7 @@ static void disconnect(Clients *clients, int frsock){
 static void relay_message(const Clients *clients, int frsock, const char *msg){
 	struct sockaddr_in sockaddr = get_client_info(frsock);
 	HostInfo host_info = get_host_info(sockaddr);	
-	unsigned short client_port = ntohs(sockaddr.sin_port);
+	uint16_t client_port = ntohs(sockaddr.sin_port);
 	printf("%s(%hu): %s", host_info.client_host, client_port, msg);
 	for (int i = 0; i < clients->size; i ++){
 		if (clients->client_list[i] != 0 && clients->client_list[i] != frsock){
@@ -101,7 +102,7 @@ static void accept_connection(Clients* clients, int servsock){
 	int csd = accept(servsock, (struct sockaddr*)&sockaddr, &len);
 	if (csd != -1) {
 		HostInfo host_info= get_host_info(sockaddr);
-		unsigned short client_port = ntohs(sockaddr.sin_port);
+		uint16_t client_port = ntohs(sockaddr.sin_port);
 		printf("admin: connect from '%s' at '%hu'\n", host_info.client_host, client_port);
 		clients->client_list[clients->size++] = csd;
 	}else{
